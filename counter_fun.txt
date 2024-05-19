@@ -1,10 +1,10 @@
 section .data
-  counter_file db "counter_fun.txt", 0
-  counter db "10000", 0
-  counter_len equ $ - counter
+  counter_fun_file db "counter_fun.txt", 0
+  counter_fun     db "1", 0
+  counter_fun_len equ $ - counter_fun
 
 section .text
-  global _start
+global _start
 
 _start:
   mov ecx, 0
@@ -14,24 +14,25 @@ _start:
   int 0x80
 
 count:
+  mov ecx, 1
+loop:
   cmp ecx, 10000
-  jge end_count
-  inc ecx
-  call count
-end_count:
+  jg end_loop
+
   mov eax, 5
-  mov ebx, counter_file
-  mov ecx, 0x101
+  mov ebx, counter_fun_file
+  mov ecx, 0x01
   mov edx, 0777o
   int 0x80
 
   mov eax, 4
   mov ebx, eax
-  mov ecx, counter
-  mov edx, counter_len
+  mov ecx, counter_fun
+  mov edx, counter_fun_len
   int 0x80
 
-  mov eax, 6
-  mov ebx, eax
-  int 0x80
+  inc ecx
+  jmp loop
+
+end_loop:
   ret
